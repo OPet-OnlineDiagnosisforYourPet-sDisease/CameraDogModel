@@ -17,7 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY main.py .
 
 # Copy the trained model file
-COPY model.pkl .
+COPY SkinDisease.h5 .
 
 # Expose the port
 EXPOSE 8000
