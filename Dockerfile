@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Menjalankan aplikasi Flask ketika container dijalankan
-CMD ["python", "app.py"]
+CMD ["python", "main.py"]
