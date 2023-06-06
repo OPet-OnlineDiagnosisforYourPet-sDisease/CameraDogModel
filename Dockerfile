@@ -1,6 +1,9 @@
 # Base image
 FROM python:3.9-slim-buster
 
+# Install MySQL/MariaDB client dependencies
+RUN apt-get update && apt-get install -y default-libmysqlclient-dev
+
 # Set working directory
 WORKDIR /app
 
@@ -14,7 +17,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY main.py .
 
 # Copy the trained model file
-COPY SkinDisease.h5 .
+COPY model.pkl .
 
 # Expose the port
 EXPOSE 8000
