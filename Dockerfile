@@ -1,17 +1,27 @@
-# Menggunakan base image Python
-FROM python:3.8
+# Base image
+FROM python:3.9-slim-buster
 
-# Mengatur working directory di dalam container
+# Set working directory
 WORKDIR /app
 
-# Menyalin dependencies ke dalam container
+# Copy requirements file
 COPY requirements.txt .
 
-# Menginstal dependencies
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Menyalin aplikasi Flask ke dalam container
-COPY . .
+# Copy the Flask app code
+COPY main.py .
 
-# Menjalankan aplikasi Flask ketika container dijalankan
-CMD ["python", "main.py"]
+# Copy the trained model file
+COPY SkinDisease.h5 .
+
+# Expose the port
+EXPOSE 8000
+
+# Set environment variables
+ENV FLASK_APP=app.py
+ENV FLASK_RUN_HOST=0.0.0.0
+
+# Run the Flask app
+CMD ["flask", "run"]
