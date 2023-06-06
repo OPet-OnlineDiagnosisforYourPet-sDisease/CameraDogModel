@@ -1,30 +1,17 @@
-# Base image
-FROM python:3.9-slim-buster
+# Menggunakan base image Python
+FROM python:3.8
 
-# Install MySQL/MariaDB client dependencies
-RUN apt-get update && apt-get install -y default-libmysqlclient-dev
-
-# Set working directory
+# Mengatur working directory di dalam container
 WORKDIR /app
 
-# Copy requirements file
+# Menyalin dependencies ke dalam container
 COPY requirements.txt .
 
-# Install dependencies
+# Menginstal dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the Flask app code
-COPY main.py .
+# Menyalin aplikasi Flask ke dalam container
+COPY . .
 
-# Copy the trained model file
-COPY SkinDisease.h5 .
-
-# Expose the port
-EXPOSE 8000
-
-# Set environment variables
-ENV FLASK_APP=app.py
-ENV FLASK_RUN_HOST=0.0.0.0
-
-# Run the Flask app
-CMD ["flask", "run"]
+# Menjalankan aplikasi Flask ketika container dijalankan
+CMD ["python", "app.py"]
