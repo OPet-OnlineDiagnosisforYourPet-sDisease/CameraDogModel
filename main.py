@@ -12,9 +12,6 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 app = FastAPI()  # create a new FastAPI app instance
 
-# port = int(os.getenv("PORT"))
-port = 8080
-
 model = tf.keras.models.load_model('SkinDisease.h5')
 
 def predict(file):
@@ -103,4 +100,6 @@ def updatedb(item: Item):
     return updatedb
 
 if __name__ == '__main__':
-    uvicorn.run(app, host="0.0.0.0", port=port, timeout_keep_alive=1200)
+    port = int(os.environ.get('PORT', 8080))
+    app.run(host='0.0.0.0', port=port)
+
