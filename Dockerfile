@@ -1,5 +1,5 @@
 # Gunakan base image Python yang sesuai dengan versi Python yang Anda gunakan
-FROM python:3.9
+FROM python:3.9-slim
 
 # Set working directory di dalam kontainer
 WORKDIR /app
