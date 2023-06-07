@@ -1,4 +1,3 @@
-import uvicorn
 from fastapi import FastAPI, UploadFile, File
 import tensorflow as tf
 import numpy as np
@@ -6,7 +5,6 @@ import os
 from tensorflow.keras.preprocessing import image
 import shutil
 from pydantic import BaseModel
-import mysql
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
@@ -16,15 +14,11 @@ model = tf.keras.models.load_model('SkinDisease.h5')
 
 def predict(file):
     img = image.load_img(file, target_size=(150,150))
-
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
-
-
     images = np.vstack([x]) 
     classes = model.predict(images) 
     print(classes[0]) 
-
     result = np.argmax(classes[0])
     
     resmessage = ""
@@ -38,7 +32,6 @@ def predict(file):
         resmessage = 'Ringworm'
 
     return resmessage
-
 
 # GCS Section
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = "./service_account.json"
@@ -76,30 +69,29 @@ def updatemysql(userID, petID, url):
 
 @app.get("/")
 def hello_world():
-    return ("hello world")
+    return "hello world"
 
 @app.post("/imageclassify")
-def imageclassify(input: UploadFile = File(...)):
+async def imageclassify(input: UploadFile = File(...)):
     savefile = input.filename
     with open(savefile, "wb") as buffer:
         shutil.copyfileobj(input.file, buffer)
     result = predict(savefile)
     gcs_url = uploadtogcs(savefile)
     os.remove(savefile)
-    return (result, gcs_url)
+    return {"result": result, "gcs_url": gcs_url}
 
 class Item(BaseModel):
     userID: int
     petID: int
     gcs_url: str
 
-
 @app.post("/updatedb")
 def updatedb(item: Item):
     updateddb = updatemysql(item.userID, item.petID, item.gcs_url)
-    return updatedb
+    return updateddb
 
 if __name__ == '__main__':
+    import uvicorn
     port = int(os.environ.get('PORT', 8080))
-    app.run(host='0.0.0.0', port=port)
-
+    uvicorn.run(app, host='0.0.0.0', port=port)
