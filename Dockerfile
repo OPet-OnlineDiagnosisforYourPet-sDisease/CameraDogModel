@@ -1,20 +1,20 @@
-# Gunakan base image Python yang sesuai dengan versi Python yang Anda gunakan
+# Base image
 FROM python:3.9-slim
 
-# Set working directory di dalam kontainer
+# Set working directory
 WORKDIR /app
 
-# Salin file requirements.txt ke dalam kontainer
+# Copy the requirements file
 COPY requirements.txt .
 
-# Install dependensi yang diperlukan
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Salin seluruh konten aplikasi ke dalam kontainer
-COPY . .
+# Copy the application code
+COPY main.py .
 
-# Expose port yang digunakan oleh aplikasi (sesuaikan dengan port yang digunakan dalam aplikasi Anda)
+# Expose port
 EXPOSE 8080
 
-# Jalankan perintah untuk menjalankan aplikasi ketika kontainer berjalan
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8080", "--reload"]
+# Run the application
+CMD ["python", "main.py"]
