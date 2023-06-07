@@ -89,7 +89,10 @@ def imageclassify(input: UploadFile = File(...)):
     result = predict(savefile)
     gcs_url = uploadtogcs(savefile)
     os.remove(savefile)
-    return (result, gcs_url)
+    return {
+        "Prediction": result,
+        "message": "Prediksi berhasil."
+    }
 
 class Item(BaseModel):
     userID: int
