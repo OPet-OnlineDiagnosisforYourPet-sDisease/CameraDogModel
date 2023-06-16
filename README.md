@@ -15,7 +15,7 @@
 # Value: File gambar
 
 # Response: 
-  {
+#  {
   "Prediction": "Flea Allergy",
   "message": "Prediksi berhasil."
-  }
+#  }
